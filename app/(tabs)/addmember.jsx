@@ -203,9 +203,10 @@ const AddMember = () => {
     setLoading(true);
     const uid = adminUID || auth.currentUser?.uid;
     console.log('UID:', uid);
-    const today = new Date();
-    const year = today.getFullYear();
-    const monthIndex = today.getMonth();
+    // Use the selected joining date for transactions and financial summary
+    const selectedJoinDate = new Date(form.joiningDate);
+    const year = selectedJoinDate.getFullYear();
+    const monthIndex = selectedJoinDate.getMonth();
     const planDuration = parseInt(form.gymPlanduration) || 30;
 
     // Calculate expiry date
@@ -282,14 +283,13 @@ console.log(planExpireDate.toISOString().split('T')[0]); // YYYY-MM-DD
       // await uploadQrAndSave(memberidString, memberRef.id, uid);
 
       // Step 2: Add initial transaction inside the member document
-      const today2 = new Date();
-      const monthId = `${today2.getFullYear()}-${String(today2.getMonth() + 1).padStart(2, '0')}`;
+      const monthId = `${year}-${String(monthIndex + 1).padStart(2, '0')}`;
 
       await addDoc(
         collection(db, 'admin', uid, 'members', memberRef.id, 'transactions'),
         {
           memberName: form.name,
-          paymentDate: today2.toISOString(),
+          paymentDate: selectedJoinDate.toISOString(),
           amountPaid: parseFloat(form.paidAmount) || 0,
           paymentMethod: form.paymentMethod,
           dues: parseFloat(form.dues) || 0,
@@ -304,7 +304,7 @@ console.log(planExpireDate.toISOString().split('T')[0]); // YYYY-MM-DD
         doc(db, 'admin', uid, 'members', memberRef.id, 'plandetails','current'),
         {
           planname: selectedPlan?.name || form.gymPlan,
-          paymentDate: today2.toISOString(),
+          paymentDate: selectedJoinDate.toISOString(),
           amountPaid: parseFloat(form.paidAmount) || 0,
           paymentMethod: form.paymentMethod,
           dues: parseFloat(form.dues) || 0,
@@ -313,7 +313,7 @@ console.log(planExpireDate.toISOString().split('T')[0]); // YYYY-MM-DD
           planExpireDate: planExpireDate.toISOString(),
           planStartDate: form.joiningDate.toISOString(),
           receiptId: `TXN${Date.now()}`,
-          planPurchaseDate: new Date().toISOString(),
+          planPurchaseDate: selectedJoinDate.toISOString(),
         }
       );
 
@@ -375,8 +375,8 @@ console.log(planExpireDate.toISOString().split('T')[0]); // YYYY-MM-DD
         uid,
         parseFloat(form.paidAmount) || 0,
         parseFloat(form.dues) || 0,
-        today.getMonth(),
-        today.getFullYear(),
+        monthIndex,
+        year,
         parseFloat(form.admissionFee) || 0
       );
 

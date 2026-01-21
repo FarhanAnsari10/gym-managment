@@ -9,7 +9,13 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.farhan100422.gymmanagement"
     },
     "android": {
       "adaptiveIcon": {
@@ -50,7 +56,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "576b8144-ccbe-4ecd-8b95-ce142b86f039"
+        "projectId": "c1223526-db7d-444d-aac9-7d53e7d6c728"
       }
     }
   }
